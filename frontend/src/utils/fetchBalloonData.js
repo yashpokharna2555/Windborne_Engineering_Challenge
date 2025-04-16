@@ -1,23 +1,26 @@
+// utils/fetchBalloonData.js
 export async function fetchAllBalloonData() {
   const balloonData = [];
 
-  for(let i=0;i<=23;i++){
-    const fileName = `${String(i).padStart(2,'0')}.json`;
-    const url = `https://a.windbornesystems.com/treasure/${filename}`;
+  // Only attempt to fetch files that are known to work
+  const validFiles = ['00.json', '03.json', '07.json'];
+
+  for (const fileName of validFiles) {
+    const url = `http://localhost:3000/balloon-data/${fileName}`;
 
     try {
       const response = await fetch(url);
-      if(!response.ok) throw new Error(`HTTP ${response.status}`);;
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const data = await response.json();
 
       balloonData.push({
         fileName,
         timestamp: new Date().toISOString(),
-        data
+        data,
       });
 
-    } catch (error) {
-      console.warn(`❌ Skipped ${filename}: ${err.message}`);
+    } catch (err) {
+      console.warn(`❌ Skipped ${fileName}: ${err.message}`);
     }
   }
 

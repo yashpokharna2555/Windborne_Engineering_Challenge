@@ -1,35 +1,35 @@
-import React, { useEffect } from 'react';
-import { useState, useEffect } from 'react'
+// App.jsx
+import React, { useEffect, useState } from 'react';
 import { fetchAllBalloonData } from './utils/fetchBalloonData';
-import './App.css'
+import './App.css';
 
 function App() {
-  const [balloons, setBaloons] = useState([])
+  const [balloons, setBalloons] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAndSetData = async() => {
+    const fetchAndSetData = async () => {
       const data = await fetchAllBalloonData();
-      setBaloons(data);
+      setBalloons(data);
       setIsLoading(false);
     };
 
     fetchAndSetData();
+    const interval = setInterval(fetchAndSetData, 10 * 60 * 1000); // Refresh every 10 minutes
 
-    const interval = setInterval(fetchAndSetData, 10 * 60 * 1000);
     return () => clearInterval(interval);
-  }, [])
+  }, []);
 
   return (
     <div className="p-6 font-sans">
       <h1 className="text-2xl font-bold mb-4">🎈 Windborne Balloon Tracker</h1>
-      {loading ? (
+      {isLoading ? (
         <p>Loading live data...</p>
       ) : (
         <ul className="space-y-2">
           {balloons.map((entry, idx) => (
             <li key={idx} className="bg-gray-100 rounded p-2 shadow-sm">
-              <strong>{entry.filename}</strong>: {JSON.stringify(entry.data).slice(0, 200)}...
+              <strong>{entry.fileName}</strong>: {JSON.stringify(entry.data).slice(0, 200)}...
             </li>
           ))}
         </ul>
@@ -38,4 +38,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
